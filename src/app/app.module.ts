@@ -7,6 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 import { CategoriasModule } from './pages/categorias/categorias.module';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,9 @@ import { CategoriasModule } from './pages/categorias/categorias.module';
     BrowserModule,
     AppRoutingModule,
     CategoriasModule,
+    HttpClientModule,
     HttpClientInMemoryWebApiModule.forRoot(InMemoryDatabase)
+
   ],
   providers: [],
   bootstrap: [AppComponent]

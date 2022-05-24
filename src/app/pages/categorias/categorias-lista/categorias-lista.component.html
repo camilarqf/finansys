@@ -22,34 +22,14 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
+    <tr *ngFor="let item of categorias">
       <td>
-        <strong>Lazer</strong><br />
-        <small>Cinema, parque, praia, etc..</small>
+        <strong>{{item.nome}}</strong><br />
+        <small>{{item.descricao}}</small>
       </td>
       <td>
-        <a [routerLink]="[12, 'editar']" class="btn btn-outline-info btn-sm me-2">Editar</a>
-        <a  class="btn btn-outline-danger btn-sm">Excluir</a>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <strong>Lazer</strong><br />
-        <small>Cinema, parque, praia, etc..</small>
-      </td>
-      <td>
-        <a [routerLink]="[12, 'editar']" class="btn btn-outline-info btn-sm me-2">Editar</a>
-        <a  class="btn btn-outline-danger btn-sm">Excluir</a>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <strong>Lazer</strong><br />
-        <small>Cinema, parque, praia, etc..</small>
-      </td>
-      <td>
-        <a [routerLink]="[12, 'editar']" class="btn btn-outline-info btn-sm me-2">Editar</a>
-        <a  class="btn btn-outline-danger btn-sm">Excluir</a>
+        <a [routerLink]="[item.id, 'editar']" class="btn btn-outline-info btn-sm me-2">Editar</a>
+        <a  (click)="deleteCategoria(item)" class="btn btn-outline-danger btn-sm">Excluir</a>
       </td>
     </tr>
   </tbody>
