@@ -3,36 +3,74 @@
     <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
     <li class="breadcrumb-item"><a routerLink="/categorias">Categorias</a></li>
     <li class="breadcrumb-item active" aria-current="page">
-      Formulário de Categoria
+      {{pageTitle}}
     </li>
   </ol>
 </nav>
 
 <div class="row mt-5 mb-4">
   <div class="col-md">
-    <h1 class="h2 border-start ps-2">Formulário de Categoria</h1>
+    <h1 class="h2 border-start ps-2">{{pageTitle}}</h1>
   </div>
   <div class="col-md">
     <a routerLink="/categorias" class="btn btn-light float-end"> << Voltar</a>
   </div>
 </div>
 
-<form action="" [formGroup]="categoryForm">
- <div class="card">
-  <div class="card-header">Informações sobre a categorias</div>
-  <div class="card-body">
-    <div class="row">
-      <div class="form-group col-md-4">
-        <label for="nome">Nome</label>
-        <input type="text" class="form-control" id="nome" />
-      </div>
-      <div class="form-group col-md-8">
-        <label for="descricao">Descrição</label>
-        <input type="text" class="form-control" id="descricao">
+<form action="" [formGroup]="categoryForm" (submit)="submitForm()">
+  <div class="card">
+    <div class="card-header">Informações sobre a categorias</div>
+    <div class="card-body">
+      <div class="row">
+        <div class="form-group col-md-4">
+          <label for="nome">Nome</label>
+          <input
+            type="text"
+            class="form-control"
+            id="nome"
+            formControlName="nome"
+          />
+          <div
+            class="text-danger"
+            *ngIf="
+              categoryForm.get('nome').invalid &&
+              categoryForm.get('nome').touched
+            "
+          >
+            <div *ngIf="categoryForm.get('nome').errors.required">
+              Dado obrigatório
+            </div>
+            <div *ngIf="categoryForm.get('nome').errors.minlenght">
+              Deve conter no mínimo 2 caracteres
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group col-md-8">
+          <label for="descricao">Descrição</label>
+          <input
+            type="text"
+            class="form-control"
+            id="descricao"
+            formControlName="descricao"
+          />
+        </div>
       </div>
     </div>
   </div>
- </div>
 
-  <button type="submit" class="btn btn-primary btn-lg float-end mt-3">Salvar</button>
+  <div class="alert alert-danger mt-4" role="alert" *ngIf="serverErrorMessages">
+    <strong>Erro no servidor</strong>
+    <ul>
+      <li *ngFor="let error of serverErrorMessages">{{error}}</li>
+    </ul>
+  </div>
+
+  <button
+    [disabled]="submittingForm || categoryForm.invalid"
+    type="submit"
+    class="btn btn-primary btn-lg float-end mt-3"
+  >
+    Salvar
+  </button>
 </form>
