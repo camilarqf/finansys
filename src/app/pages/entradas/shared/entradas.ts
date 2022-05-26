@@ -18,6 +18,6 @@ export class Entradas {
   }
 
   getPagoText(): string{
-    return this.pago ? 'Pago' : 'Pendente';
+    return this.pago ? 'Pago' : 'Pendente'
   }
 }
