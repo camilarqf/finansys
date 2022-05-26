@@ -10,6 +10,8 @@ import { CategoriasModule } from './pages/categorias/categorias.module';
 import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from "ngx-toastr";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { EntradasModule } from './pages/entradas/entradas.module';
+
 
 @NgModule({
   declarations: [
@@ -26,7 +28,9 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
       closeButton: true,
       progressBar: true,
     }),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    EntradasModule,
+
 
   ],
   providers: [],
