@@ -1,0 +1,9 @@
+.breadcrumb{
+  background-color: rgb(231, 228, 228);
+  padding: 1em;
+  border-radius: 5px;
+}
+
+.breadcrumb a {
+  text-decoration: none;
+}

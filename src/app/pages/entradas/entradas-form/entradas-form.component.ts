@@ -1,7 +1,10 @@
+import { CategoriasService } from './../../categorias/shared/categorias.service';
+import { Categorias } from './../../categorias/shared/categorias';
 import { AfterContentChecked, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ActivatedRoute, Router } from '@angular/router';
+import { locale } from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { switchMap } from 'rxjs/operators';
 import { EntradasService } from '../shared/entrada.service';
@@ -19,20 +22,49 @@ export class EntradasFormComponent implements OnInit, AfterContentChecked {
   serverErrorMessages: string[] = null;
   submittingForm: boolean = false;
   entrada: Entradas = new Entradas();
+  categoria: Categorias[] = [];
+
+  imaskConfig ={
+    mask: Number,
+    scale: 2,
+    thousandsSeparator: '',
+    padFractionalZeros: true,
+    normalizeZeros: true,
+    radix: ',',
+
+  }
+
+  ptBR = {
+    firstDayOfWeek: 0,
+    dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+    dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+    dayNamesMin: ['Do', 'Se', 'Te', 'Qu', 'Qu', 'Se', 'Sa'],
+    monthNames: [
+      'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho',
+      'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+    ],
+    monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+    today: 'Hoje',
+    clear: 'Limpar'
+  }
 
   constructor(
     private entradaService: EntradasService,
     private route: ActivatedRoute,
     private router: Router,
     private formBuilder: FormBuilder,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private categoriaService: CategoriasService
   ) {}
 
   ngOnInit(): void {
     this.setCurrentAction();
     this.buildEntryForm();
     this.loadEntry();
+    this.loadCategory();
   }
+
+
 
   ngAfterContentChecked(): void {
     this.setPageTitle();
@@ -48,6 +80,17 @@ export class EntradasFormComponent implements OnInit, AfterContentChecked {
     }
   }
 
+  get typeOptions(): Array<any>{
+    return Object.entries(Entradas.tipos).map(
+      ([value, text]) =>{
+        return {
+          text: text,
+          value: value
+        }
+      }
+    )
+  }
+
   private setCurrentAction() {
     if (this.route.snapshot.url[0].path == 'novo') {
       this.currentAction = 'novo';
@@ -61,10 +104,10 @@ export class EntradasFormComponent implements OnInit, AfterContentChecked {
       id: [null],
       nome: [null, [Validators.required, Validators.minLength(2)]],
       descricao: [null],
-      tipo: [null,  [Validators.required]],
+      tipo: ['despesa',  [Validators.required]],
       valor: [null,  [Validators.required]],
       data: [null,  [Validators.required]],
-      pago: [null,  [Validators.required]],
+      pago: [true,  [Validators.required]],
       categoriaId: [null,  [Validators.required]]
     });
   }
@@ -87,7 +130,15 @@ export class EntradasFormComponent implements OnInit, AfterContentChecked {
           }
         );
     }
+
   }
+
+ private loadCategory() {
+    this.categoriaService.getAll().subscribe(response =>{
+      this.categoria = response;
+    })
+  }
+
 
   private setPageTitle() {
     if (this.currentAction == 'novo') {

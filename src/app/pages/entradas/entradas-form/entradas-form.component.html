@@ -3,14 +3,14 @@
     <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
     <li class="breadcrumb-item"><a routerLink="/entradas">Lançamentos</a></li>
     <li class="breadcrumb-item active" aria-current="page">
-      {{pageTitle}}
+      {{ pageTitle }}
     </li>
   </ol>
 </nav>
 
 <div class="row mt-5 mb-4">
   <div class="col-md-9">
-    <h1 class="h2 border-start ps-2">{{pageTitle}}</h1>
+    <h1 class="h2 border-start ps-2">{{ pageTitle }}</h1>
   </div>
   <div class="col-md-3">
     <a routerLink="/entradas" class="btn btn-light float-end"> << Voltar</a>
@@ -22,8 +22,30 @@
     <div class="card-header">Informações sobre lançamentos</div>
     <div class="card-body">
       <div class="row">
-        <div class="form-group col-md-4">
-          <label for="nome">Nome</label>
+        <div class="form-group col-md-2">
+          <label for="nome">Tipo</label>
+          <select
+            name="tipo"
+            id="tipo"
+            formControlName="tipo"
+            class="form-control form-select"
+          >
+            <option *ngFor="let item of typeOptions" [ngValue]="item.value">{{item.text}}</option>
+
+          </select>
+          <div
+            class="text-danger"
+            *ngIf="
+              entryForm.get('tipo').invalid && entryForm.get('tipo').touched
+            "
+          >
+            <div *ngIf="entryForm.get('tipo').errors.required">
+              Dado obrigatório
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-md-5">
+          <label for="nome">Lançamento</label>
           <input
             type="text"
             class="form-control"
@@ -33,8 +55,7 @@
           <div
             class="text-danger"
             *ngIf="
-              entryForm.get('nome').invalid &&
-              entryForm.get('nome').touched
+              entryForm.get('nome').invalid && entryForm.get('nome').touched
             "
           >
             <div *ngIf="entryForm.get('nome').errors.required">
@@ -46,7 +67,116 @@
           </div>
         </div>
 
-        <div class="form-group col-md-8">
+        <div class="form-group col-md-3">
+          <label for="valor">Valor</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <div class="input-group-text">R$</div>
+            </div>
+            <input
+              type="text"
+              [imask]="imaskConfig"
+              class="form-control text-end"
+              formControlName="valor"
+            />
+          </div>
+
+          <div
+            class="text-danger"
+            *ngIf="
+              entryForm.get('valor').invalid && entryForm.get('valor').touched
+            "
+          >
+            <div *ngIf="entryForm.get('valor').errors.required">
+              Dado obrigatório
+            </div>
+            <div *ngIf="entryForm.get('valor').errors.minlenght">
+              Deve conter no mínimo 2 caracteres
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group col-md-2">
+          <label for="nome">Data</label>
+          <p-calendar
+            id="data"
+            formControlName="data"
+            inputStyleClass="form-control"
+            dataType="string"
+            dateFormat="dd/mm/yy"
+            [locale]="ptBR"
+            [showButtonBar]="true"
+          >
+          </p-calendar>
+          <div
+            class="text-danger"
+            *ngIf="
+              entryForm.get('nome').invalid && entryForm.get('nome').touched
+            "
+          >
+            <div *ngIf="entryForm.get('nome').errors.required">
+              Dado obrigatório
+            </div>
+            <div *ngIf="entryForm.get('nome').errors.minlenght">
+              Deve conter no mínimo 2 caracteres
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-2">
+          <label for="pago">Pago</label><br/>
+          <div class="btn-group" role="group">
+            <label
+              (click)="entryForm.get('pago').setValue(true)"
+              [class.active]="entryForm.get('pago').value == true"
+              class="btn btn-outline-info"
+              >Pago</label
+            >
+            <label
+              (click)="entryForm.get('pago').setValue(false)"
+              [class.active]="entryForm.get('pago').value == false"
+              class="btn btn-outline-info"
+              >Pendente</label
+            >
+          </div>
+
+          <div
+            class="text-danger"
+            *ngIf="
+              entryForm.get('pago').invalid && entryForm.get('pago').touched
+            "
+          >
+            <div *ngIf="entryForm.get('pago').errors.required">
+              Dado obrigatório
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group col-md-3">
+          <label for="nome">Categoria</label>
+          <select
+            name="categoriaId"
+            id="categoriaId"
+            formControlName="categoriaId"
+            class="form-control form-select"
+          >
+            <option *ngFor="let item of categoria"[value]="item.id">{{item.nome}}</option>
+
+          </select>
+          <div
+            class="text-danger"
+            *ngIf="
+              entryForm.get('categoriaId').invalid && entryForm.get('categoriaId').touched
+            "
+          >
+            <div *ngIf="entryForm.get('categoriaId').errors.required">
+              Dado obrigatório
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group col-md-5">
           <label for="descricao">Descrição</label>
           <input
             type="text"
@@ -62,7 +192,7 @@
   <div class="alert alert-danger mt-4" role="alert" *ngIf="serverErrorMessages">
     <strong>Erro no servidor</strong>
     <ul>
-      <li *ngFor="let error of serverErrorMessages">{{error}}</li>
+      <li *ngFor="let error of serverErrorMessages">{{ error }}</li>
     </ul>
   </div>
 
@@ -74,3 +204,5 @@
     Salvar
   </button>
 </form>
+
+<pre>{{entryForm.value | json}}</pre>

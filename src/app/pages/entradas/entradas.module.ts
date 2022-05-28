@@ -5,17 +5,17 @@ import { EntradasRoutingModule } from './entradas-routing.module';
 import { EntradasListaComponent } from './entradas-lista/entradas-lista.component';
 import { EntradasFormComponent } from './entradas-form/entradas-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
-
+import { CalendarModule } from 'primeng/calendar';
+import { IMaskModule } from 'angular-imask';
 
 @NgModule({
-  declarations: [
-    EntradasListaComponent,
-    EntradasFormComponent
-  ],
+  declarations: [EntradasListaComponent, EntradasFormComponent],
   imports: [
     CommonModule,
     EntradasRoutingModule,
-    ReactiveFormsModule
-  ]
+    ReactiveFormsModule,
+    CalendarModule,
+    IMaskModule
+  ],
 })
-export class EntradasModule { }
+export class EntradasModule {}
