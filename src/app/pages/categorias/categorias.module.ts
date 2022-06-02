@@ -1,10 +1,9 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { SharedModule } from 'src/app/shared/shared.module';
 
-import { CategoriasRoutingModule } from './categorias-routing.module';
-import { CategoriasListaComponent } from './categorias-lista/categorias-lista.component';
 import { CategoriasFormComponent } from './categorias-form/categorias-form.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { CategoriasListaComponent } from './categorias-lista/categorias-lista.component';
+import { CategoriasRoutingModule } from './categorias-routing.module';
 
 
 @NgModule({
@@ -14,9 +13,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 
   ],
   imports: [
-    CommonModule,
     CategoriasRoutingModule,
-    ReactiveFormsModule
+    SharedModule
   ]
 })
 export class CategoriasModule { }
