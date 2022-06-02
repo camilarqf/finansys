@@ -1,5 +1,7 @@
+import { BaseResourceModel } from 'src/app/shared/models/base-resource-model';
 import { Categorias } from './../../categorias/shared/categorias';
-export class Entradas {
+
+export class Entradas extends BaseResourceModel{
   constructor(
     public id?: number,
     public nome?: string,
@@ -10,7 +12,9 @@ export class Entradas {
     public pago?: boolean,
     public categoriaId?: number,
     public categoria?: Categorias
-  ){}
+  ){
+    super();
+  }
 
   static tipos ={
     despesa: 'Despesa',
