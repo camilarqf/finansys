@@ -1,8 +1,9 @@
+import { CategoriasService } from './../../categorias/shared/categorias.service';
 import { Entradas } from './entradas';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, flatMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,10 @@ import { map, catchError } from 'rxjs/operators';
 export class EntradasService {
   private apiPath: string = 'api/entradas';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private categoriaService: CategoriasService
+  ) {}
 
   getAll(): Observable<Entradas[]> {
     return this.http
@@ -26,17 +30,31 @@ export class EntradasService {
   }
 
   create(entrada: Entradas): Observable<Entradas> {
-    return this.http
-      .post(this.apiPath, entrada)
-      .pipe(catchError(this.handlerError), map(this.jsonDataToEntrada));
+    return this.categoriaService.getById(entrada.categoriaId).pipe(
+      flatMap((response) => {
+        entrada.categoria = response;
+
+        return this.http
+          .post(this.apiPath, entrada)
+          .pipe(catchError(this.handlerError), map(this.jsonDataToEntrada));
+      })
+    );
   }
 
   update(entrada: Entradas): Observable<Entradas> {
     const url = `${this.apiPath}/${entrada.id}`;
-    return this.http.put(url, entrada).pipe(
-      catchError(this.handlerError),
-      map(() => entrada) //retorna a entrada que foi recebida
+
+     return this.categoriaService.getById(entrada.categoriaId).pipe(
+      flatMap((response) => {
+        entrada.categoria = response;
+
+        return this.http.put(url, entrada).pipe(
+          catchError(this.handlerError),
+          map(() => entrada) //retorna a entrada que foi recebida
+        );
+      })
     );
+
   }
 
   delete(id: number): Observable<any> {
@@ -50,14 +68,14 @@ export class EntradasService {
   private jsonDataToEntradas(jsonData: any[]): Entradas[] {
     const entradas: Entradas[] = [];
     jsonData.forEach((element) => {
-      const entrada = Object.assign(new Entradas(), element)
-      entradas.push(entrada)
+      const entrada = Object.assign(new Entradas(), element);
+      entradas.push(entrada);
     });
     return entradas;
   }
 
   private jsonDataToEntrada(jsonData: any): Entradas {
-    return Object.assign(new Entradas(), jsonData)
+    return Object.assign(new Entradas(), jsonData);
   }
 
   private handlerError(error: any): Observable<any> {
